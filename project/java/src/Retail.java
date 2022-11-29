@@ -261,15 +261,29 @@ public class Retail {
             System.out.println("---------");
             System.out.println("1. Create user");
             System.out.println("2. Log in");
+            // System.out.println("3. Check user type"); //checks if customer, manager, or admin
             System.out.println("9. < EXIT");
-            String authorisedUser = null;
+            // String authorisedUser = null;
+            int userID = null;
+            String credential = null;
+            
             switch (readChoice()){
                case 1: CreateUser(esql); break;
-               case 2: authorisedUser = LogIn(esql); break;
+               case 2: userID = LogIn(esql); break;
+               // case 3: credential = getUserType(esql); break;
                case 9: keepon = false; break;
                default : System.out.println("Unrecognized choice!"); break;
             }//end switch
-            if (authorisedUser != null) {
+
+            if (userID != null) {
+               credential = getUserType(esql, userID);
+            }
+            
+            //if statement
+            // boolean isCustomer = false;
+            // boolean isManager = false;
+            // boolean isAdmin = false;
+            if (userID != null) {
               boolean usermenu = true;
               while(usermenu) {
                 System.out.println("MAIN MENU");
@@ -361,8 +375,9 @@ public class Retail {
          String latitude = in.readLine();       //enter lat value between [0.0, 100.0]
          System.out.print("\tEnter longitude: ");  //enter long value between [0.0, 100.0]
          String longitude = in.readLine();
-         
-         String type="Customer";
+         System.out.print("\tAre you a customer, manager, or admin? ");
+         String type = in.readLine();
+         // String type="Customer";
 
 			String query = String.format("INSERT INTO USERS (name, password, latitude, longitude, type) VALUES ('%s','%s', %s, %s,'%s')", name, password, latitude, longitude, type);
 
@@ -376,14 +391,42 @@ public class Retail {
 
    /*
     * Check log in credentials for an existing user
-    * @return User login or null is the user does not exist
+    * @return User login ID or null if the user does not exist
     **/
-   public static String LogIn(Retail esql){
+   public static int LogIn(Retail esql){
       try{
          System.out.print("\tEnter name: ");
          String name = in.readLine();
          System.out.print("\tEnter password: ");
          String password = in.readLine();
+
+         String query = String.format("SELECT userID FROM USERS WHERE name = '%s' AND password = '%s'", name, password);
+         int userNum = esql.executeQuery(query);
+
+         List<List<String>> result = esql.executeQueryAndReturnResult(query);
+         //convert str to int
+
+
+         int id = null;
+	 if (userNum > 0)
+		return id;
+         return null;
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         return null;
+      }
+   }//end
+
+
+   /*
+    * Check for an existing user's type ('customer', 'manager', or 'admin')
+    * @return User type or null if the user does not exist
+    **/
+   public static String getUserType(Retail esql, int id){
+      try{
+         System.out.print("\tEnter user ID: ");
+         String userID = in.readLine();
+         
 
          String query = String.format("SELECT * FROM USERS WHERE name = '%s' AND password = '%s'", name, password);
          int userNum = esql.executeQuery(query);
