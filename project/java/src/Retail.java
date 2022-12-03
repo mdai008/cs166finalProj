@@ -276,6 +276,9 @@ public class Retail {
                        System.out.print("\tEnter password: ");
                        _password = in.readLine();
                        _userID = LogIn(esql, _name, _password);
+                       _type = getType(esql, _userID);
+                       _userLat = getLat(esql, _userID);
+                       _userLong = getLong(esql, _userID);
                        break;
                case 9: keepon = false; break;
                default : System.out.println("Unrecognized choice!"); break;
