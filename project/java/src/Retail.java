@@ -262,14 +262,25 @@ public class Retail {
             System.out.println("1. Create user");
             System.out.println("2. Log in");
             System.out.println("9. < EXIT");
-            String authorisedUser = null;
+            //current user info
+            String _name = null; //store current user name
+            String _password = null; //store current user password
+            int _userID = null; //store current userID
+            String _type = null; //store user type: customer, manager, admin
+            double _userLat = null; //store user latitude
+            double _userLong = null; //store user longitude
             switch (readChoice()){
                case 1: CreateUser(esql); break;
-               case 2: authorisedUser = LogIn(esql); break;
+               case 2: System.out.print("\tEnter name: ");
+                       _name = in.readLine();
+                       System.out.print("\tEnter password: ");
+                       _password = in.readLine();
+                       _userID = LogIn(esql, _name, _password);
+                       break;
                case 9: keepon = false; break;
                default : System.out.println("Unrecognized choice!"); break;
             }//end switch
-            if (authorisedUser != null) {
+            if (_userID != null) {
               boolean usermenu = true;
               while(usermenu) {
                 System.out.println("MAIN MENU");
@@ -378,17 +389,17 @@ public class Retail {
     * Check log in credentials for an existing user
     * @return User login or null is the user does not exist
     **/
-   public static String LogIn(Retail esql){
+    // returns userID
+   public static int LogIn(Retail esql, String name, String password){
       try{
-         System.out.print("\tEnter name: ");
-         String name = in.readLine();
-         System.out.print("\tEnter password: ");
-         String password = in.readLine();
-
          String query = String.format("SELECT * FROM USERS WHERE name = '%s' AND password = '%s'", name, password);
          int userNum = esql.executeQuery(query);
+         System.out.println("Saving results.");
+         List<List<String>> _result = esql.executeQueryAndReturnResult(query);
+         System.out.println("Results saved successfully.");
+
 	 if (userNum > 0)
-		return name;
+		return 255;
          return null;
       }catch(Exception e){
          System.err.println (e.getMessage ());
