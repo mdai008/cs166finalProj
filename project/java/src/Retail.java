@@ -388,6 +388,7 @@ public class Retail {
          String type = null;
 
          while (!inputAccepted) {
+            System.out.println(input);
             if (input == "customer" || input == "Customer") {
                type = "customer";
                inputAccepted = true;
