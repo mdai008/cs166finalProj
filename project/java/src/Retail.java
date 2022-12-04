@@ -430,7 +430,8 @@ public class Retail {
          System.out.println("Saving results.");
          List<List<String>> _result = esql.executeQueryAndReturnResult(query);
          System.out.println("Results saved successfully.");
-
+         int rows = executeQueryAndPrintResult(query);
+         System.out.println("Printing results.");
 
 
       if (userNum > 0) {
