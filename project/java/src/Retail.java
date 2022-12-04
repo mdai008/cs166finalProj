@@ -276,7 +276,12 @@ public class Retail {
                        System.out.print("\tEnter password: ");
                        _password = in.readLine();
                        _userID = LogIn(esql, _name, _password);
-                       System.out.println()
+                       if (_userID != -1) {
+                           String userIDstr = Integer.toString(_userID);
+                           String output = "Your userID is " + userIDstr + ".";
+                           System.out.println(output);
+                       }
+                       
                      //   _type = getType(esql, _userID);
                      //   _userLat = getLat(esql, _userID);
                      //   _userLong = getLong(esql, _userID);
@@ -402,7 +407,7 @@ public class Retail {
          esql.executeUpdate(query);
          System.out.println ("User successfully created!");
 
-         String output = "Hello " + type + " " + name + ".";
+         String output = "Welcome " + type + " " + name + ".";
          System.out.println (output);
 
       }catch(Exception e){
