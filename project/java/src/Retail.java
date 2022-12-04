@@ -383,17 +383,19 @@ public class Retail {
          String longitude = in.readLine();
          System.out.print("\tAre you a 'customer', 'manager', or 'admin'? ");
          String input = in.readLine(); 
+         
          boolean inputAccepted = false;
+         String type = null;
 
          while (!inputAccepted) {
             if (input == "customer" || input == "Customer") {
-               String type = "customer";
+               type = "customer";
                inputAccepted = true;
             } else if (input == "manager" || input == "Manager") {
-               String type = "manager";
+               type = "manager";
                inputAccepted = true;
             } else if (input == "admin" || input == "Admin") {
-               String type = "admin";
+               type = "admin";
                inputAccepted = true;
             } else {
                System.out.print("\tInput Error. Enter 'customer', 'manager', or 'admin'. ");
