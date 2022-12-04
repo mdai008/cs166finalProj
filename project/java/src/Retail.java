@@ -388,14 +388,13 @@ public class Retail {
          String type = null;
 
          while (!inputAccepted) {
-            System.out.println(input);
-            if (input == "customer" || input == "Customer") {
+            if (input.equals("customer") || input.equals("Customer")) {
                type = "customer";
                inputAccepted = true;
-            } else if (input == "manager" || input == "Manager") {
+            } else if (input.equals("manager") || input.equals("Manager")) {
                type = "manager";
                inputAccepted = true;
-            } else if (input == "admin" || input == "Admin") {
+            } else if (input.equals("admin") || input.equals("Admin")) {
                type = "admin";
                inputAccepted = true;
             } else {
