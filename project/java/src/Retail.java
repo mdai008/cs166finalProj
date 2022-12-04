@@ -265,10 +265,10 @@ public class Retail {
             //current user info
             String _name = null; //store current user name
             String _password = null; //store current user password
-            int _userID = null; //store current userID
+            int _userID = -1; //store current userID
             String _type = null; //store user type: customer, manager, admin
-            double _userLat = null; //store user latitude
-            double _userLong = null; //store user longitude
+            double _userLat = -1; //store user latitude
+            double _userLong = -1; //store user longitude
             switch (readChoice()){
                case 1: CreateUser(esql); break;
                case 2: System.out.print("\tEnter name: ");
@@ -276,14 +276,15 @@ public class Retail {
                        System.out.print("\tEnter password: ");
                        _password = in.readLine();
                        _userID = LogIn(esql, _name, _password);
-                       _type = getType(esql, _userID);
-                       _userLat = getLat(esql, _userID);
-                       _userLong = getLong(esql, _userID);
+                       System.out.println()
+                     //   _type = getType(esql, _userID);
+                     //   _userLat = getLat(esql, _userID);
+                     //   _userLong = getLong(esql, _userID);
                        break;
                case 9: keepon = false; break;
                default : System.out.println("Unrecognized choice!"); break;
             }//end switch
-            if (_userID != null) {
+            if (_userID != -1) {
               boolean usermenu = true;
               while(usermenu) {
                 System.out.println("MAIN MENU");
@@ -371,17 +372,39 @@ public class Retail {
          String name = in.readLine();
          System.out.print("\tEnter password: ");
          String password = in.readLine();
-         System.out.print("\tEnter latitude: ");   
+         System.out.print("\tEnter latitude value between [0.0, 100.0]: ");   
          String latitude = in.readLine();       //enter lat value between [0.0, 100.0]
-         System.out.print("\tEnter longitude: ");  //enter long value between [0.0, 100.0]
+         System.out.print("\tEnter longitude value between [0.0, 100.0]: ");  //enter long value between [0.0, 100.0]
          String longitude = in.readLine();
-         
-         String type="Customer";
+         System.out.print("\tAre you a 'customer', 'manager', or 'admin'? ");
+         String input = in.readLine(); 
+         boolean inputAccepted = false;
+
+         while (!inputAccepted) {
+            if (input == "customer" || input == "Customer") {
+               String type = "customer";
+               inputAccepted = true;
+            } else if (input == "manager" || input == "Manager") {
+               String type = "manager";
+               inputAccepted = true;
+            } else if (input == "admin" || input == "Admin") {
+               String type = "admin";
+               inputAccepted = true;
+            } else {
+               System.out.print("\tInput Error. Enter 'customer', 'manager', or 'admin'. ");
+               input = in.readLine();
+            }
+         }
+
 
 			String query = String.format("INSERT INTO USERS (name, password, latitude, longitude, type) VALUES ('%s','%s', %s, %s,'%s')", name, password, latitude, longitude, type);
 
          esql.executeUpdate(query);
          System.out.println ("User successfully created!");
+
+         String output = "Hello " + type + " " + name + ".";
+         System.out.println (output);
+
       }catch(Exception e){
          System.err.println (e.getMessage ());
       }
@@ -401,12 +424,20 @@ public class Retail {
          List<List<String>> _result = esql.executeQueryAndReturnResult(query);
          System.out.println("Results saved successfully.");
 
-	 if (userNum > 0)
-		return 255;
-         return null;
+
+
+      if (userNum > 0) {
+         String output = "Login successful. Hello " + name + ".";
+         System.out.println (output);
+         return 255; //return userID
+      }
+      else {
+         System.out.println("Login unsuccessful.");
+         return -1;
+      }
       }catch(Exception e){
          System.err.println (e.getMessage ());
-         return null;
+         return -1;
       }
    }//end
 
