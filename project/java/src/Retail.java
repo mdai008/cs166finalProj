@@ -142,24 +142,14 @@ public class Retail {
       int userID = -1;
       String userIDstr = null;
       
-      boolean outputHeader = true;
       while (rs.next()){
-		 if(outputHeader){
-			for(int i = 1; i <= numCol; i++){
-			System.out.print(rsmd.getColumnName(i) + "\t");
-			}
-			System.out.println();
-			outputHeader = false;
-		 }
-         for (int i=1; i<=numCol; ++i)
-            System.out.print (rs.getString (i) + "\t");
-         System.out.println ();
-         
+         for (int i=1; i<=numCol; ++i) {
+            if (i == 1) {
+               userIDstr = rs.getString(i);
+               userID = Integer.parseInt(userIDstr);
+            }
+         }  
       }
-
-      userIDstr = rs.getString(1);
-      
-      userID = Integer.parseInt(userIDstr);
 
       stmt.close ();
       return userID;
@@ -298,7 +288,8 @@ public class Retail {
             //current user info
             String _name = null; //store current user name
             String _password = null; //store current user password
-            int _userID = -1; //store current userID
+            int _userID = -1; //store current userID as int
+            String _userIDstr = null; //store current userID as string
             String _type = null; //store user type: customer, manager, admin
             double _userLat = -1; //store user latitude
             double _userLong = -1; //store user longitude
@@ -310,7 +301,7 @@ public class Retail {
                        _password = in.readLine();
                        _userID = LogIn(esql, _name, _password);
                        if (_userID != -1) {
-                           String userIDstr = Integer.toString(_userID);
+                           _userIDstr = Integer.toString(_userID);
                            String output = "Your userID is " + userIDstr + ".";
                            System.out.println(output);
                        }
@@ -463,11 +454,9 @@ public class Retail {
          // System.out.println("Saving results.");
          // List<List<String>> _result = esql.executeQueryAndReturnResult(query);
          // System.out.println("Results saved successfully.");
-         System.out.println("Printing info."); //comment out
-         int rows = esql.executeQueryAndPrintResult(query); //comment out
-         System.out.println("a");
+         // System.out.println("Printing info."); //comment out
+         // int rows = esql.executeQueryAndPrintResult(query); //comment out
          int userID = esql.getUserID(query);
-         System.out.println("b");
 
       if (userNum > 0) {
          String output = "Login successful. Hello " + name + ".";
