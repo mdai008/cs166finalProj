@@ -137,8 +137,25 @@ public class Retail {
    public int getUserID (String query) throws SQLException {
       Statement stmt = this._connection.createStatement ();
       ResultSet rs = stmt.executeQuery (query);
+      ResultSetMetaData rsmd = rs.getMetaData ();
+      int numCol = rsmd.getColumnCount ();
       int userID = -1;
       String userIDstr = null;
+      
+      boolean outputHeader = true;
+      while (rs.next()){
+		 if(outputHeader){
+			for(int i = 1; i <= numCol; i++){
+			System.out.print(rsmd.getColumnName(i) + "\t");
+			}
+			System.out.println();
+			outputHeader = false;
+		 }
+         for (int i=1; i<=numCol; ++i)
+            System.out.print (rs.getString (i) + "\t");
+         System.out.println ();
+         
+      }
 
       userIDstr = rs.getString(1);
       
