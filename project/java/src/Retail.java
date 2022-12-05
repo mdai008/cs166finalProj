@@ -155,6 +155,25 @@ public class Retail {
       return userID;
    }
 
+   public String getType (String query) throws SQLException {
+      Statement stmt = this._connection.createStatement ();
+      ResultSet rs = stmt.executeQuery (query);
+      ResultSetMetaData rsmd = rs.getMetaData ();
+      int numCol = rsmd.getColumnCount (); //1 column
+      String type = null;
+      
+      while (rs.next()){
+         for (int i=1; i<=numCol; ++i) {
+            if (i == 1) {
+               type = rs.getString(i);
+            }
+         }  
+      }
+
+      stmt.close ();
+      return type;
+   }
+
 
 
    /**
@@ -302,13 +321,14 @@ public class Retail {
                        _userID = LogIn(esql, _name, _password);
                        if (_userID != -1) {
                            _userIDstr = Integer.toString(_userID);
-                           String output = "Your userID is " + userIDstr + ".";
+                           String output = "Your userID is " + _userIDstr + ".";
                            System.out.println(output);
                        }
                        
-                     //   _type = getType(esql, _userID);
-                     //   _userLat = getLat(esql, _userID);
-                     //   _userLong = getLong(esql, _userID);
+                       _type = getUserType(esql, _userIDstr);
+                       System.out.println(_type); //for debugging
+                     //   _userLat = getUserLat(esql, _userIDstr);
+                     //   _userLong = getUserLong(esql, _userIDstr);
                        break;
                case 9: keepon = false; break;
                default : System.out.println("Unrecognized choice!"); break;
@@ -470,6 +490,26 @@ public class Retail {
       }catch(Exception e){
          System.err.println (e.getMessage ());
          return -1;
+      }
+   }//end
+
+   
+   public static String getUserType(Retail esql, String userID){
+      try{
+         String query = String.format("SELECT type FROM USERS WHERE userID = '%s'", userID);
+         int userNum = esql.executeQuery(query);
+         String type = esql.getType(query);
+
+      if (userNum > 0) {
+         return type; 
+      }
+      else {
+         System.out.println("User type does not exist.");
+         return null;
+      }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         return null;
       }
    }//end
 
