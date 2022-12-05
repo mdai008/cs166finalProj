@@ -169,9 +169,46 @@ public class Retail {
             }
          }  
       }
-
       stmt.close ();
       return type;
+   }
+
+   public String getLat (String query) throws SQLException {
+      Statement stmt = this._connection.createStatement ();
+      ResultSet rs = stmt.executeQuery (query);
+      ResultSetMetaData rsmd = rs.getMetaData ();
+      int numCol = rsmd.getColumnCount (); //1 column
+      
+      String lat = null;
+      
+      while (rs.next()){ //iterate through rows
+         for (int i=1; i<=numCol; ++i) {
+            if (i == 1) {
+               lat = rs.getString(i); //sets variable to last row's value
+            }
+         }  
+      }
+      stmt.close ();
+      return lat;
+   }
+
+   public String getLong (String query) throws SQLException {
+      Statement stmt = this._connection.createStatement ();
+      ResultSet rs = stmt.executeQuery (query);
+      ResultSetMetaData rsmd = rs.getMetaData ();
+      int numCol = rsmd.getColumnCount (); //1 column
+      
+      String longg = null;
+      
+      while (rs.next()){ //iterate through rows
+         for (int i=1; i<=numCol; ++i) {
+            if (i == 1) {
+               longg = rs.getString(i); //sets variable to last row's value
+            }
+         }  
+      }
+      stmt.close ();
+      return longg;
    }
 
 
@@ -310,8 +347,10 @@ public class Retail {
             int _userID = -1; //store current userID as int
             String _userIDstr = null; //store current userID as string
             String _type = null; //store user type: customer, manager, admin
-            double _userLat = -1; //store user latitude
-            double _userLong = -1; //store user longitude
+            double _userLat = -1; //store user latitude as int
+            String _userLatstr = null; //store user latitude as string
+            double _userLong = -1; //store user longitude as int
+            String _userLongstr = null; //store user longitude as string
             switch (readChoice()){
                case 1: CreateUser(esql); break;
                case 2: System.out.print("\tEnter name: ");
@@ -326,9 +365,11 @@ public class Retail {
                        }
                        
                        _type = getUserType(esql, _userIDstr);
-                       System.out.println(_type); //for debugging
-                     //   _userLat = getUserLat(esql, _userIDstr);
-                     //   _userLong = getUserLong(esql, _userIDstr);
+                     //   System.out.println(_type); //for debugging
+                       _userLatstr = getUserLat(esql, _userIDstr);
+                       _userLat = Double.parseDouble(_userLatstr);
+                       _userLongstr = getUserLong(esql, _userIDstr);
+                       _userLong = Double.parseDouble(_userLongstr);
                        break;
                case 9: keepon = false; break;
                default : System.out.println("Unrecognized choice!"); break;
@@ -505,6 +546,44 @@ public class Retail {
       }
       else {
          System.out.println("User type does not exist.");
+         return null;
+      }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         return null;
+      }
+   }//end
+
+   public static String getUserLat(Retail esql, String userID){
+      try{
+         String query = String.format("SELECT latitude FROM USERS WHERE userID = '%s'", userID);
+         int userNum = esql.executeQuery(query);
+         String lat = esql.getLat(query);
+
+      if (userNum > 0) {
+         return lat; 
+      }
+      else {
+         System.out.println("User latitude does not exist.");
+         return null;
+      }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         return null;
+      }
+   }//end
+
+   public static String getUserLong(Retail esql, String userID){
+      try{
+         String query = String.format("SELECT longitude FROM USERS WHERE userID = '%s'", userID);
+         int userNum = esql.executeQuery(query);
+         String longg = esql.getLong(query);
+
+      if (userNum > 0) {
+         return longg; 
+      }
+      else {
+         System.out.println("User longitude does not exist.");
          return null;
       }
       }catch(Exception e){
