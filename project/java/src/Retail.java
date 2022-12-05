@@ -134,6 +134,22 @@ public class Retail {
       return rowCount;
    }//end executeQuery
 
+   public int getUserID (String query) throws SQLException {
+      Statement stmt = this._connection.createStatement ();
+      ResultSet rs = stmt.executeQuery (query);
+      int userID = -1;
+      String userIDstr = null;
+
+      userIDstr = rs.getString(1);
+      
+      userID = Integer.parseInt(userIDstr);
+
+      stmt.close ();
+      return userID;
+   }
+
+
+
    /**
     * Method to execute an input query SQL instruction (i.e. SELECT).  This
     * method issues the query to the DBMS and returns the results as
@@ -427,17 +443,18 @@ public class Retail {
       try{
          String query = String.format("SELECT * FROM USERS WHERE name = '%s' AND password = '%s'", name, password);
          int userNum = esql.executeQuery(query);
-         System.out.println("Saving results.");
-         List<List<String>> _result = esql.executeQueryAndReturnResult(query);
-         System.out.println("Results saved successfully.");
-         int rows = executeQueryAndPrintResult(query);
-         System.out.println("Printing results.");
+         // System.out.println("Saving results.");
+         // List<List<String>> _result = esql.executeQueryAndReturnResult(query);
+         // System.out.println("Results saved successfully.");
+         System.out.println("Printing info."); //comment out
+         int rows = esql.executeQueryAndPrintResult(query); //comment out
+         int userID = esql.getUserID(query);
 
 
       if (userNum > 0) {
          String output = "Login successful. Hello " + name + ".";
          System.out.println (output);
-         return 255; //return userID
+         return userID; //return userID
       }
       else {
          System.out.println("Login unsuccessful.");
