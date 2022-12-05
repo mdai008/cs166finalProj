@@ -134,6 +134,85 @@ public class Retail {
       return rowCount;
    }//end executeQuery
 
+   public int getUserID (String query) throws SQLException {
+      Statement stmt = this._connection.createStatement ();
+      ResultSet rs = stmt.executeQuery (query);
+      ResultSetMetaData rsmd = rs.getMetaData ();
+      int numCol = rsmd.getColumnCount ();
+      int userID = -1;
+      String userIDstr = null;
+      
+      while (rs.next()){
+         for (int i=1; i<=numCol; ++i) {
+            if (i == 1) {
+               userIDstr = rs.getString(i);
+               userID = Integer.parseInt(userIDstr);
+            }
+         }  
+      }
+
+      stmt.close ();
+      return userID;
+   }
+
+   public String getType (String query) throws SQLException {
+      Statement stmt = this._connection.createStatement ();
+      ResultSet rs = stmt.executeQuery (query);
+      ResultSetMetaData rsmd = rs.getMetaData ();
+      int numCol = rsmd.getColumnCount (); //1 column
+      String type = null;
+      
+      while (rs.next()){
+         for (int i=1; i<=numCol; ++i) {
+            if (i == 1) {
+               type = rs.getString(i);
+            }
+         }  
+      }
+      stmt.close ();
+      return type;
+   }
+
+   public String getLat (String query) throws SQLException {
+      Statement stmt = this._connection.createStatement ();
+      ResultSet rs = stmt.executeQuery (query);
+      ResultSetMetaData rsmd = rs.getMetaData ();
+      int numCol = rsmd.getColumnCount (); //1 column
+      
+      String lat = null;
+      
+      while (rs.next()){ //iterate through rows
+         for (int i=1; i<=numCol; ++i) {
+            if (i == 1) {
+               lat = rs.getString(i); //sets variable to last row's value
+            }
+         }  
+      }
+      stmt.close ();
+      return lat;
+   }
+
+   public String getLong (String query) throws SQLException {
+      Statement stmt = this._connection.createStatement ();
+      ResultSet rs = stmt.executeQuery (query);
+      ResultSetMetaData rsmd = rs.getMetaData ();
+      int numCol = rsmd.getColumnCount (); //1 column
+      
+      String longg = null;
+      
+      while (rs.next()){ //iterate through rows
+         for (int i=1; i<=numCol; ++i) {
+            if (i == 1) {
+               longg = rs.getString(i); //sets variable to last row's value
+            }
+         }  
+      }
+      stmt.close ();
+      return longg;
+   }
+
+
+
    /**
     * Method to execute an input query SQL instruction (i.e. SELECT).  This
     * method issues the query to the DBMS and returns the results as
@@ -262,14 +341,44 @@ public class Retail {
             System.out.println("1. Create user");
             System.out.println("2. Log in");
             System.out.println("9. < EXIT");
-            String authorisedUser = null;
+            //current user info
+            String _name = null; //store current user name
+            String _password = null; //store current user password
+            int _userID = -1; //store current userID as int
+            String _userIDstr = null; //store current userID as string
+            String _type = null; //store user type: customer, manager, admin
+            double _userLat = -1; //store user latitude as int
+            String _userLatstr = null; //store user latitude as string
+            double _userLong = -1; //store user longitude as int
+            String _userLongstr = null; //store user longitude as string
             switch (readChoice()){
                case 1: CreateUser(esql); break;
-               case 2: authorisedUser = LogIn(esql); break;
+               case 2: System.out.print("\tEnter name: ");
+                       _name = in.readLine();
+                       System.out.print("\tEnter password: ");
+                       _password = in.readLine();
+                       _userID = LogIn(esql, _name, _password);
+                       if (_userID != -1) {
+                           _userIDstr = Integer.toString(_userID);
+                           String output = "Your userID is " + _userIDstr + ".";
+                           System.out.println(output);
+                       }
+                       
+                       _type = getUserType(esql, _userIDstr);
+                       System.out.println(_type); //for debugging
+                       _userLatstr = getUserLat(esql, _userIDstr);
+                       System.out.println(_userLatstr); //for debugging
+                       _userLat = Double.parseDouble(_userLatstr);
+                       System.out.println(_userLat); //for debugging
+                       _userLongstr = getUserLong(esql, _userIDstr);
+                       System.out.println(_userLongstr); //for debugging
+                       _userLong = Double.parseDouble(_userLongstr);
+                       System.out.println(_userLong); //for debugging
+                       break;
                case 9: keepon = false; break;
                default : System.out.println("Unrecognized choice!"); break;
             }//end switch
-            if (authorisedUser != null) {
+            if (_userID != -1) {
               boolean usermenu = true;
               while(usermenu) {
                 System.out.println("MAIN MENU");
@@ -357,17 +466,41 @@ public class Retail {
          String name = in.readLine();
          System.out.print("\tEnter password: ");
          String password = in.readLine();
-         System.out.print("\tEnter latitude: ");   
+         System.out.print("\tEnter latitude value between [0.0, 100.0]: ");   
          String latitude = in.readLine();       //enter lat value between [0.0, 100.0]
-         System.out.print("\tEnter longitude: ");  //enter long value between [0.0, 100.0]
+         System.out.print("\tEnter longitude value between [0.0, 100.0]: ");  //enter long value between [0.0, 100.0]
          String longitude = in.readLine();
+         System.out.print("\tAre you a 'customer', 'manager', or 'admin'? ");
+         String input = in.readLine(); 
          
-         String type="Customer";
+         boolean inputAccepted = false;
+         String type = null;
+
+         while (!inputAccepted) {
+            if (input.equals("customer") || input.equals("Customer")) {
+               type = "customer";
+               inputAccepted = true;
+            } else if (input.equals("manager") || input.equals("Manager")) {
+               type = "manager";
+               inputAccepted = true;
+            } else if (input.equals("admin") || input.equals("Admin")) {
+               type = "admin";
+               inputAccepted = true;
+            } else {
+               System.out.print("\tInput Error. Enter 'customer', 'manager', or 'admin'. ");
+               input = in.readLine();
+            }
+         }
+
 
 			String query = String.format("INSERT INTO USERS (name, password, latitude, longitude, type) VALUES ('%s','%s', %s, %s,'%s')", name, password, latitude, longitude, type);
 
          esql.executeUpdate(query);
          System.out.println ("User successfully created!");
+
+         String output = "Welcome " + type + " " + name + ".";
+         System.out.println (output);
+
       }catch(Exception e){
          System.err.println (e.getMessage ());
       }
@@ -378,18 +511,85 @@ public class Retail {
     * Check log in credentials for an existing user
     * @return User login or null is the user does not exist
     **/
-   public static String LogIn(Retail esql){
+    // returns userID
+   public static int LogIn(Retail esql, String name, String password){
       try{
-         System.out.print("\tEnter name: ");
-         String name = in.readLine();
-         System.out.print("\tEnter password: ");
-         String password = in.readLine();
-
          String query = String.format("SELECT * FROM USERS WHERE name = '%s' AND password = '%s'", name, password);
          int userNum = esql.executeQuery(query);
-	 if (userNum > 0)
-		return name;
+         // System.out.println("Saving results.");
+         // List<List<String>> _result = esql.executeQueryAndReturnResult(query);
+         // System.out.println("Results saved successfully.");
+         // System.out.println("Printing info."); //comment out
+         // int rows = esql.executeQueryAndPrintResult(query); //comment out
+         int userID = esql.getUserID(query);
+
+      if (userNum > 0) {
+         String output = "Login successful. Hello " + name + ".";
+         System.out.println (output);
+         return userID; //return userID
+      }
+      else {
+         System.out.println("Login unsuccessful.");
+         return -1;
+      }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         return -1;
+      }
+   }//end
+
+   
+   public static String getUserType(Retail esql, String userID){
+      try{
+         String query = String.format("SELECT type FROM USERS WHERE userID = '%s'", userID);
+         int userNum = esql.executeQuery(query);
+         String type = esql.getType(query);
+
+      if (userNum > 0) {
+         return type; 
+      }
+      else {
+         System.out.println("User type does not exist.");
          return null;
+      }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         return null;
+      }
+   }//end
+
+   public static String getUserLat(Retail esql, String userID){
+      try{
+         String query = String.format("SELECT latitude FROM USERS WHERE userID = '%s'", userID);
+         int userNum = esql.executeQuery(query);
+         String lat = esql.getLat(query);
+
+      if (userNum > 0) {
+         return lat; 
+      }
+      else {
+         System.out.println("User latitude does not exist.");
+         return null;
+      }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         return null;
+      }
+   }//end
+
+   public static String getUserLong(Retail esql, String userID){
+      try{
+         String query = String.format("SELECT longitude FROM USERS WHERE userID = '%s'", userID);
+         int userNum = esql.executeQuery(query);
+         String longg = esql.getLong(query);
+
+      if (userNum > 0) {
+         return longg; 
+      }
+      else {
+         System.out.println("User longitude does not exist.");
+         return null;
+      }
       }catch(Exception e){
          System.err.println (e.getMessage ());
          return null;
