@@ -365,11 +365,15 @@ public class Retail {
                        }
                        
                        _type = getUserType(esql, _userIDstr);
-                     //   System.out.println(_type); //for debugging
+                       System.out.println(_type); //for debugging
                        _userLatstr = getUserLat(esql, _userIDstr);
+                       System.out.println(_userLatstr); //for debugging
                        _userLat = Double.parseDouble(_userLatstr);
+                       System.out.println(_userLat); //for debugging
                        _userLongstr = getUserLong(esql, _userIDstr);
+                       System.out.println(_userLongstr); //for debugging
                        _userLong = Double.parseDouble(_userLongstr);
+                       System.out.println(_userLong); //for debugging
                        break;
                case 9: keepon = false; break;
                default : System.out.println("Unrecognized choice!"); break;
