@@ -448,8 +448,9 @@ public class Retail {
          // System.out.println("Results saved successfully.");
          System.out.println("Printing info."); //comment out
          int rows = esql.executeQueryAndPrintResult(query); //comment out
+         System.out.println("a");
          int userID = esql.getUserID(query);
-
+         System.out.println("b");
 
       if (userNum > 0) {
          String output = "Login successful. Hello " + name + ".";
