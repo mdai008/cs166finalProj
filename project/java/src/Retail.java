@@ -403,7 +403,7 @@ public class Retail {
 
                   // String dummy = _type.strip();
                   String str = "    manager";
-                  String dummy = str.strip();
+                  String dummy = str.trim();
                   System.out.println(_type.getClass());
                 if (dummy.equals("manager")) {
                   System.out.println("a");
