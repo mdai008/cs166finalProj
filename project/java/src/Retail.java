@@ -600,10 +600,7 @@ public class Retail {
 
    public static void viewStores(Retail esql, String userLat, String userLong) { //add dist parameters
       try{
-         String query = String.format("SELECT S.storeID, S.name 
-                                       FROM Store S 
-                                       WHERE calculate_distance(%s, %s, S.latitude, S.longitude) <= 30", 
-                                       userLat, userLong);
+         String query = String.format("SELECT S.storeID, S.name FROM Store S WHERE calculate_distance(%s, %s, S.latitude, S.longitude) <= 30", userLat, userLong);
          
 
          int userNum = esql.executeQuery(query);
