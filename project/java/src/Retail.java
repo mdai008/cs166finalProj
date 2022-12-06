@@ -745,7 +745,7 @@ public class Retail {
    public static void viewRecentOrders(Retail esql, String userID) {
       try{
          
-         String query = String.format("SELECT DISTINCT S.storeID, S.name, O.productName, O.unitsOrdered, O.orderTime FROM Store S, Orders O WHERE O.customerID = %s AND O.storeID = S.storeID ORDER BY O.orderNumber DESC LIMIT 5", userID);
+         String query = String.format("SELECT O.orderNumber, S.storeID, S.name, O.productName, O.unitsOrdered, O.orderTime FROM Store S, Orders O WHERE O.customerID = %s AND O.storeID = S.storeID ORDER BY O.orderNumber DESC LIMIT 5", userID);
          
          int userNum = esql.executeQuery(query);
 
