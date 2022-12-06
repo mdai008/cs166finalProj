@@ -365,6 +365,7 @@ public class Retail {
                        }
                        
                        _type = getUserType(esql, _userIDstr);
+                       _type = _type.trim();
                      //   System.out.println(_type); //for debugging
                        _userLatstr = getUserLat(esql, _userIDstr);
                      //   System.out.println(_userLatstr); //for debugging
@@ -387,13 +388,17 @@ public class Retail {
                 System.out.println("2. View Product List");
                 System.out.println("3. Place a Order");
                 System.out.println("4. View 5 recent orders");
-
-                //the following functionalities basically used by managers
-                System.out.println("5. Update Product");
-                System.out.println("6. View 5 recent Product Updates Info");
-                System.out.println("7. View 5 Popular Items");
-                System.out.println("8. View 5 Popular Customers");
-                System.out.println("9. Place Product Supply Request to Warehouse");
+                
+                
+                if (_type.equals("manager") || _type.equals("admin")) {
+                  //the following functionalities basically used by managers
+                  System.out.println("5. Update Product");
+                  System.out.println("6. View 5 recent Product Updates Info");
+                  System.out.println("7. View 5 Popular Items");
+                  System.out.println("8. View 5 Popular Customers");
+                  System.out.println("9. Place Product Supply Request to Warehouse");
+                }
+                
 
                 System.out.println(".........................");
                 System.out.println("20. Log out");
@@ -401,9 +406,9 @@ public class Retail {
                    case 1: viewStores(esql, _userLatstr, _userLongstr); break;
                    case 2: viewProducts(esql); break;
                    case 3: placeOrder(esql, _userLatstr, _userLongstr, _userIDstr); break;
-                   case 4: viewRecentOrders(esql); break;
+                   case 4: viewRecentOrders(esql, _userIDstr); break;
                    case 5: updateProduct(esql, _userIDstr); break;
-                   case 6: viewRecentUpdates(esql); break;
+                   case 6: viewRecentUpdates(esql, _userIDstr); break;
                    case 7: viewPopularProducts(esql); break;
                    case 8: viewPopularCustomers(esql); break;
                    case 9: placeProductSupplyRequests(esql); break;
@@ -718,8 +723,43 @@ public class Retail {
    }
 
 
-   public static void viewRecentUpdates(Retail esql) {}
-   public static void viewRecentOrders(Retail esql) {}
+   public static void viewRecentUpdates(Retail esql, String userID) {
+      try{
+         
+         String query = String.format("SELECT * FROM ProductUpdates P WHERE P.managerID = %s ORDER BY updateNumber DESC LIMIT 5", userID);
+         
+
+         int userNum = esql.executeQuery(query);
+
+         if (userNum > 0) {
+            int rowNum = esql.executeQueryAndPrintResult(query); 
+         }
+         else {
+            System.out.println("View recent update error occured.");
+         }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         
+      }
+   }
+   public static void viewRecentOrders(Retail esql, String userID) {
+      try{
+         
+         String query = String.format("SELECT O.orderNumber, S.storeID, S.name, O.productName, O.unitsOrdered, O.orderTime FROM Store S, Orders O WHERE O.customerID = %s AND O.storeID = S.storeID ORDER BY O.orderNumber DESC LIMIT 5", userID);
+         
+         int userNum = esql.executeQuery(query);
+
+         if (userNum > 0) {
+            int rowNum = esql.executeQueryAndPrintResult(query); 
+         }
+         else {
+            System.out.println("View recent order error occured.");
+         }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+            
+      }
+   }
    public static void viewPopularProducts(Retail esql) {}
    public static void viewPopularCustomers(Retail esql) {}
    public static void placeProductSupplyRequests(Retail esql) {}
