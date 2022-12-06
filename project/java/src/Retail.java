@@ -617,7 +617,28 @@ public class Retail {
    }
 
 
-   public static void viewProducts(Retail esql) {}
+   public static void viewProducts(Retail esql) {
+      try{
+         System.out.print("\tEnter a storeID to view products: ");
+         String storeID = in.readLine();
+         //check if input is an integer
+         
+         String query = String.format("SELECT P.productName, P.numberOfUnits, P.pricePerUnit FROM Product P WHERE P.storeID = %s", storeID);
+         
+
+         int userNum = esql.executeQuery(query);
+
+         if (userNum > 0) {
+            int rowNum = esql.executeQueryAndPrintResult(query); 
+         }
+         else {
+            System.out.println("Invalid storeID or store does not have any product.");
+         }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         
+      }
+   }
    public static void placeOrder(Retail esql) {}
    public static void viewRecentOrders(Retail esql) {}
    public static void updateProduct(Retail esql) {}
