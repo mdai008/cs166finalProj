@@ -400,7 +400,7 @@ public class Retail {
                 switch (readChoice()){
                    case 1: viewStores(esql, _userLatstr, _userLongstr); break;
                    case 2: viewProducts(esql); break;
-                   case 3: placeOrder(esql); break;
+                   case 3: placeOrder(esql, _userLatstr, _userLongstr, _userIDstr); break;
                    case 4: viewRecentOrders(esql); break;
                    case 5: updateProduct(esql); break;
                    case 6: viewRecentUpdates(esql); break;
@@ -639,7 +639,42 @@ public class Retail {
          
       }
    }
-   public static void placeOrder(Retail esql) {}
+
+
+   public static void placeOrder(Retail esql, String userLat, String userLong, String userID) {
+      try{
+         System.out.print("\tEnter a storeID to order from: ");
+         String storeID = in.readLine();
+         System.out.print("\tEnter a product name to order: ");
+         String prodName = in.readLine();
+         System.out.print("\tEnter the number of units to order: ");
+         String numUnits = in.readLine();
+         
+         
+         String query = String.format("SELECT * FROM Product P, (SELECT S.storeID FROM Store S WHERE calculate_distance(%s, %s, S.latitude, S.longitude) <= 30 AND S.storeID = %s) AS X WHERE X.storeID = P.storeID AND P.productName = '%s' AND P.numberOfUnits >= %s", userLat, userLong, storeID, prodName, numUnits);
+
+         // product table update with after trigger TODO
+         
+
+         int userNum = esql.executeQuery(query);
+         if (userNum > 0) {
+            String query2 = String.format("INSERT INTO Orders (customerID, storeID, productName, unitsOrdered) VALUES (%s, %s, '%s', %s)", userID, storeID, prodName, numUnits);
+            esql.executeUpdate(query2); 
+            System.out.println("Order placed.");
+         }
+         else {
+            System.out.println("Order unable to be placed.");
+         }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         
+      }
+   }
+
+
+
+
+
    public static void viewRecentOrders(Retail esql) {}
    public static void updateProduct(Retail esql) {}
    public static void viewRecentUpdates(Retail esql) {}
