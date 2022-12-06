@@ -658,7 +658,7 @@ public class Retail {
 
          // product table update with after trigger TODO
          // or execute another query after the insert
-         // add before trigger for orders for orderTime timestamp?
+         
          
 
          int userNum = esql.executeQuery(query);
