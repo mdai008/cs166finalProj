@@ -347,9 +347,9 @@ public class Retail {
             int _userID = -1; //store current userID as int
             String _userIDstr = null; //store current userID as string
             String _type = null; //store user type: customer, manager, admin
-            double _userLat = -1; //store user latitude as int
+            double _userLat = -1; //store user latitude as double
             String _userLatstr = null; //store user latitude as string
-            double _userLong = -1; //store user longitude as int
+            double _userLong = -1; //store user longitude as double
             String _userLongstr = null; //store user longitude as string
             switch (readChoice()){
                case 1: CreateUser(esql); break;
@@ -365,15 +365,15 @@ public class Retail {
                        }
                        
                        _type = getUserType(esql, _userIDstr);
-                       System.out.println(_type); //for debugging
+                     //   System.out.println(_type); //for debugging
                        _userLatstr = getUserLat(esql, _userIDstr);
-                       System.out.println(_userLatstr); //for debugging
+                     //   System.out.println(_userLatstr); //for debugging
                        _userLat = Double.parseDouble(_userLatstr);
-                       System.out.println(_userLat); //for debugging
+                     //   System.out.println(_userLat); //for debugging
                        _userLongstr = getUserLong(esql, _userIDstr);
-                       System.out.println(_userLongstr); //for debugging
+                     //   System.out.println(_userLongstr); //for debugging
                        _userLong = Double.parseDouble(_userLongstr);
-                       System.out.println(_userLong); //for debugging
+                     //   System.out.println(_userLong); //for debugging
                        break;
                case 9: keepon = false; break;
                default : System.out.println("Unrecognized choice!"); break;
@@ -398,7 +398,7 @@ public class Retail {
                 System.out.println(".........................");
                 System.out.println("20. Log out");
                 switch (readChoice()){
-                   case 1: viewStores(esql); break;
+                   case 1: viewStores(esql, _userLatstr, _userLongstr); break;
                    case 2: viewProducts(esql); break;
                    case 3: placeOrder(esql); break;
                    case 4: viewRecentOrders(esql); break;
@@ -598,7 +598,28 @@ public class Retail {
 
 // Rest of the functions definition go in here
 
-   public static void viewStores(Retail esql) {}
+   public static void viewStores(Retail esql, String userLat, String userLong) { //add dist parameters
+      try{
+         String query = String.format("SELECT S.storeID, S.name 
+                                       FROM Store S 
+                                       WHERE calculate_distance(%s, %s, S.latitude, S.longitude) <= 30", 
+                                       userLat, userLong);
+         
+
+         int userNum = esql.executeQuery(query);
+         if (userNum > 0) {
+            int rowNum = esql.executeQueryAndPrintResult(query); 
+         }
+         else {
+            System.out.println("There are no stores within 30 miles of your location.");
+         }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         
+      }
+   }
+
+
    public static void viewProducts(Retail esql) {}
    public static void placeOrder(Retail esql) {}
    public static void viewRecentOrders(Retail esql) {}
