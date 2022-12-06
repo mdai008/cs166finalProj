@@ -654,11 +654,12 @@ public class Retail {
          String query = String.format("SELECT * FROM Product P, (SELECT S.storeID FROM Store S WHERE calculate_distance(%s, %s, S.latitude, S.longitude) <= 30 AND S.storeID = %s) AS X WHERE X.storeID = P.storeID AND P.productName = '%s' AND P.numberOfUnits >= %s", userLat, userLong, storeID, prodName, numUnits);
 
          // product table update with after trigger TODO
+         // add before trigger for orders for orderTime timestamp?
          
 
          int userNum = esql.executeQuery(query);
          if (userNum > 0) {
-            String query2 = String.format("INSERT INTO Orders (customerID, storeID, productName, unitsOrdered) VALUES (%s, %s, '%s', %s)", userID, storeID, prodName, numUnits);
+            String query2 = String.format("INSERT INTO Orders (customerID, storeID, productName, unitsOrdered, orderTime) VALUES (%s, %s, '%s', %s, DATE_TRUNC('second', CURRENT_TIMESTAMP::timestamp))", userID, storeID, prodName, numUnits);
             esql.executeUpdate(query2); 
             System.out.println("Order placed.");
          }
