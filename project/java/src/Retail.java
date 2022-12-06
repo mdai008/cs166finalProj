@@ -394,7 +394,7 @@ public class Retail {
                   System.out.println("6. View 5 recent Product Updates Info");
                   System.out.println("7. View 5 Popular Items");
                   System.out.println("8. View 5 Popular Customers");
-                  System.out.println("9. Place Product Supply Request to Warehouse")
+                  System.out.println("9. Place Product Supply Request to Warehouse");
                 }
                 
 
