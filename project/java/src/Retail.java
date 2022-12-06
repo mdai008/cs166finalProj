@@ -397,6 +397,8 @@ public class Retail {
                   System.out.println("7. View 5 Popular Items");
                   System.out.println("8. View 5 Popular Customers");
                   System.out.println("9. Place Product Supply Request to Warehouse");
+                  System.out.println("10. View all order info");
+
                 }
                 
 
@@ -412,6 +414,7 @@ public class Retail {
                    case 7: viewPopularProducts(esql); break;
                    case 8: viewPopularCustomers(esql); break;
                    case 9: placeProductSupplyRequests(esql); break;
+                   case 10: viewOrderInfo(esql, _userIDstr); break; 
 
                    case 20: usermenu = false; break;
                    default : System.out.println("Unrecognized choice!"); break;
@@ -754,6 +757,27 @@ public class Retail {
          }
          else {
             System.out.println("View recent order error occured.");
+         }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+            
+      }
+   }
+   public static void viewOrderInfo(Retail esql, String userID) {
+      try{
+         
+         String query = String.format("SELECT S.storeID, O.orderNumber, U.name, O.productName, O.orderTime FROM Store S, Orders O, Users U WHERE S.managerID = %s AND S.storeID = O.storeID AND O.customerID = U.userID", userID);
+         
+         
+
+
+         int userNum = esql.executeQuery(query);
+
+         if (userNum > 0) {
+            int rowNum = esql.executeQueryAndPrintResult(query); 
+         }
+         else {
+            System.out.println("View order info error occured.");
          }
       }catch(Exception e){
          System.err.println (e.getMessage ());
