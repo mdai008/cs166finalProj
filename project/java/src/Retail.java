@@ -401,8 +401,8 @@ public class Retail {
                   System.out.println("else statement");
                 }
 
-
-                if (_type.equals("manager")) {
+                  String dummy = "manager";
+                if (dummy.equals("manager")) {
                   System.out.println("a");
                 }
                 else {
