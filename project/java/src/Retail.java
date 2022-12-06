@@ -700,7 +700,7 @@ public class Retail {
             String price = in.readLine();
             
             
-            String query2 = String.format("UPDATE Product P SET P.numberOfUnits = %s, P.pricePerUnit = %s WHERE P.storeID = %s AND P.productName = '%s'", numUnits, price, storeID, prodName);
+            String query2 = String.format("UPDATE Product SET numberOfUnits = %s, pricePerUnit = %s WHERE storeID = %s AND productName = '%s'", numUnits, price, storeID, prodName);
             esql.executeUpdate(query2); 
             System.out.println("Product updated.");
          }
