@@ -402,7 +402,7 @@ public class Retail {
                    case 2: viewProducts(esql); break;
                    case 3: placeOrder(esql, _userLatstr, _userLongstr, _userIDstr); break;
                    case 4: viewRecentOrders(esql); break;
-                   case 5: updateProduct(esql); break;
+                   case 5: updateProduct(esql, _userIDstr); break;
                    case 6: viewRecentUpdates(esql); break;
                    case 7: viewPopularProducts(esql); break;
                    case 8: viewPopularCustomers(esql); break;
@@ -656,8 +656,6 @@ public class Retail {
          
          String query = String.format("SELECT * FROM Product P, (SELECT S.storeID FROM Store S WHERE calculate_distance(%s, %s, S.latitude, S.longitude) <= 30 AND S.storeID = %s) AS X WHERE X.storeID = P.storeID AND P.productName = '%s' AND P.numberOfUnits >= %s", userLat, userLong, storeID, prodName, numUnits);
 
-         // product table update with after trigger TODO
-         // or execute another query after the insert
          
          
 
@@ -680,9 +678,48 @@ public class Retail {
 
 
 
-   public static void viewRecentOrders(Retail esql) {}
-   public static void updateProduct(Retail esql) {}
+   public static void updateProduct(Retail esql, String userID) {
+      try{
+         System.out.print("\tEnter a storeID to update product: ");
+         String storeID = in.readLine();
+         
+         
+         //checks if user is the manager of this store
+         String query = String.format("SELECT * FROM Store S WHERE S.storeID = %s AND S.managerID = %s", storeID, userID);
+
+         
+         
+
+         int userNum = esql.executeQuery(query);
+         if (userNum > 0) {
+            System.out.print("\tEnter product name for updating: ");
+            String prodName = in.readLine();
+            System.out.print("\tEnter updated number of units: ");
+            String numUnits = in.readLine();
+            System.out.print("\tEnter updated price per unit: ");
+            String price = in.readLine();
+            
+            
+            String query2 = String.format("UPDATE Product SET numberOfUnits = %s, pricePerUnit = %s WHERE storeID = %s AND productName = '%s'", numUnits, price, storeID, prodName);
+            esql.executeUpdate(query2); 
+            System.out.println("Product updated.");
+            //Paige, xyz, manager of store 3
+            
+            
+         }
+         else {
+            System.out.println("You are not the manager of this store.");
+         }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         
+      }
+
+   }
+
+
    public static void viewRecentUpdates(Retail esql) {}
+   public static void viewRecentOrders(Retail esql) {}
    public static void viewPopularProducts(Retail esql) {}
    public static void viewPopularCustomers(Retail esql) {}
    public static void placeProductSupplyRequests(Retail esql) {}
