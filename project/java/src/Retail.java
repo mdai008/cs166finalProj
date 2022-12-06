@@ -413,7 +413,7 @@ public class Retail {
                    case 6: viewRecentUpdates(esql, _userIDstr); break;
                    case 7: viewPopularProducts(esql); break;
                    case 8: viewPopularCustomers(esql); break;
-                   case 9: placeProductSupplyRequests(esql); break;
+                   case 9: placeProductSupplyRequests(esql, _userIDstr); break;
                    case 10: viewOrderInfo(esql, _userIDstr); break; 
 
                    case 20: usermenu = false; break;
@@ -786,7 +786,38 @@ public class Retail {
    }
    public static void viewPopularProducts(Retail esql) {}
    public static void viewPopularCustomers(Retail esql) {}
-   public static void placeProductSupplyRequests(Retail esql) {}
+
+
+   public static void placeProductSupplyRequests(Retail esql, String userID) {
+      try{
+         System.out.print("\tEnter storeID for request: ");
+         String storeID = in.readLine();
+         System.out.print("\tEnter a product for request: ");
+         String prodName = in.readLine();
+         System.out.print("\tEnter the number of units needed: ");
+         String numUnits = in.readLine();
+         System.out.print("\tEnter WarehouseID: ");
+         String warehouse = in.readLine();
+         
+         
+         String query = String.format("INSERT INTO ProductSupplyRequests(managerID, warehouseID, storeID, productName, unitsRequested) VALUES (%s, %s, %s, '%s', %s)", userID, warehouse, storeID, prodName, numUnits);
+         esql.executeUpdate(query); 
+         
+         String query2 = String.format("INSERT INTO ProductUpdates(managerID, storeID, productName, updatedOn) VALUES (%s, %s,'%s', DATE_TRUNC('second', CURRENT_TIMESTAMP::timestamp))", userID, storeID, prodName);
+         esql.executeUpdate(query2); 
+
+         String query3 = String.format("UPDATE Product SET numberOfUnits = numberOfUnits + %s  WHERE storeID = %s AND productName = '%s'", numUnits, storeID, prodName);
+         esql.executeUpdate(query3);
+         
+         
+         System.out.println("Supply request placed.");
+         
+         
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         
+      }
+   }
 
 }//end Retail
 
