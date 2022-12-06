@@ -402,6 +402,14 @@ public class Retail {
                 }
                 
 
+                if (_type.equals("admin")) {
+                  //the following functionalities basically used by admins
+                  System.out.println("11. View all user info");
+                  System.out.println("12. View all product info");
+
+                }
+                
+
                 System.out.println(".........................");
                 System.out.println("20. Log out");
                 switch (readChoice()){
@@ -415,6 +423,11 @@ public class Retail {
                    case 8: viewPopularCustomers(esql); break;
                    case 9: placeProductSupplyRequests(esql, _userIDstr); break;
                    case 10: viewOrderInfo(esql, _userIDstr); break; 
+                   case 11: viewAllUsers(esql); break; 
+                   case 12: viewAllProducts(esql); break; 
+
+
+
 
                    case 20: usermenu = false; break;
                    default : System.out.println("Unrecognized choice!"); break;
@@ -818,6 +831,44 @@ public class Retail {
          
       }
    }
+   public static void viewAllUsers(Retail esql) {
+      try{
+         
+         String query = "SELECT * FROM Users";
+
+         int userNum = esql.executeQuery(query);
+
+         if (userNum > 0) {
+            int rowNum = esql.executeQueryAndPrintResult(query); 
+         }
+         else {
+            System.out.println("View all user info error occured.");
+         }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+            
+      }
+   }
+   public static void viewAllProducts(Retail esql) {
+      try{
+         
+         String query = "SELECT * FROM Product";
+
+         int userNum = esql.executeQuery(query);
+
+         if (userNum > 0) {
+            int rowNum = esql.executeQueryAndPrintResult(query); 
+         }
+         else {
+            System.out.println("View all product info error occured.");
+         }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+            
+      }
+   }
+   // public static void viewAllProducts(Retail esql) {}
+   // public static void viewAllProducts(Retail esql) {}
 
 }//end Retail
 
