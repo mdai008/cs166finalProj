@@ -365,6 +365,7 @@ public class Retail {
                        }
                        
                        _type = getUserType(esql, _userIDstr);
+                       _type = _type.trim();
                      //   System.out.println(_type); //for debugging
                        _userLatstr = getUserLat(esql, _userIDstr);
                      //   System.out.println(_userLatstr); //for debugging
@@ -388,7 +389,7 @@ public class Retail {
                 System.out.println("3. Place a Order");
                 System.out.println("4. View 5 recent orders");
                 
-                System.out.println(_type);
+                
                 if (_type.equals("manager") || _type.equals("admin")) {
                   //the following functionalities basically used by managers
                   System.out.println("5. Update Product");
@@ -396,20 +397,6 @@ public class Retail {
                   System.out.println("7. View 5 Popular Items");
                   System.out.println("8. View 5 Popular Customers");
                   System.out.println("9. Place Product Supply Request to Warehouse");
-                }
-                else {
-                  System.out.println("else statement");
-                }
-
-                  // String dummy = _type.strip();
-                  String str = "    manager";
-                  String dummy = str.trim();
-                  System.out.println(_type.getClass());
-                if (dummy.equals("manager")) {
-                  System.out.println("a");
-                }
-                else {
-                  System.out.println("b");
                 }
                 
 
