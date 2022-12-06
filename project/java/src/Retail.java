@@ -397,6 +397,17 @@ public class Retail {
                   System.out.println("8. View 5 Popular Customers");
                   System.out.println("9. Place Product Supply Request to Warehouse");
                 }
+                else {
+                  System.out.println("else statement");
+                }
+
+
+                if (_type.equals("manager")) {
+                  System.out.println("a");
+                }
+                else {
+                  System.out.println("b");
+                }
                 
 
                 System.out.println(".........................");
