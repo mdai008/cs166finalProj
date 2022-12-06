@@ -55,3 +55,31 @@ EXECUTE PROCEDURE updateProduct();
 
 
 
+--define after trigger function for updating products
+CREATE OR REPLACE FUNCTION updateProduct2()
+RETURNS "trigger" AS
+$BODY$
+BEGIN
+    INSERT INTO ProductUpdates (managerID, storeID, productName, updatedOn) VALUES ((SELECT S.managerID FROM Store S WHERE S.storeID = NEW.storeID), NEW.storeID, NEW.productName, DATE_TRUNC('second', CURRENT_TIMESTAMP::timestamp));
+    
+    -- (SELECT S.managerID FROM Store S WHERE S.storeID = NEW.storeID)
+
+    RETURN NULL; 
+
+
+END;
+$BODY$
+LANGUAGE plpgsql VOLATILE;
+
+
+--create updateProduct2 trigger
+DROP TRIGGER IF EXISTS updateProduct2Trigger ON Product;
+
+CREATE TRIGGER updateProduct2Trigger
+AFTER UPDATE
+ON Product
+FOR EACH ROW
+EXECUTE PROCEDURE updateProduct2();
+
+
+

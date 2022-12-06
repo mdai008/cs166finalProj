@@ -703,6 +703,9 @@ public class Retail {
             String query2 = String.format("UPDATE Product SET numberOfUnits = %s, pricePerUnit = %s WHERE storeID = %s AND productName = '%s'", numUnits, price, storeID, prodName);
             esql.executeUpdate(query2); 
             System.out.println("Product updated.");
+            //Paige, xyz, manager of store 3
+            
+            
          }
          else {
             System.out.println("You are not the manager of this store.");
