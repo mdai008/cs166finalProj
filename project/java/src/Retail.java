@@ -403,7 +403,7 @@ public class Retail {
                    case 3: placeOrder(esql, _userLatstr, _userLongstr, _userIDstr); break;
                    case 4: viewRecentOrders(esql); break;
                    case 5: updateProduct(esql, _userIDstr); break;
-                   case 6: viewRecentUpdates(esql); break;
+                   case 6: viewRecentUpdates(esql, _userIDstr); break;
                    case 7: viewPopularProducts(esql); break;
                    case 8: viewPopularCustomers(esql); break;
                    case 9: placeProductSupplyRequests(esql); break;
@@ -718,7 +718,25 @@ public class Retail {
    }
 
 
-   public static void viewRecentUpdates(Retail esql) {}
+   public static void viewRecentUpdates(Retail esql, String userID) {
+      try{
+         
+         String query = String.format("SELECT * FROM ProductUpdates P WHERE P.managerID = %s ORDER BY updateNumber DESC LIMIT 5", userID);
+         
+
+         int userNum = esql.executeQuery(query);
+
+         if (userNum > 0) {
+            int rowNum = esql.executeQueryAndPrintResult(query); 
+         }
+         else {
+            System.out.println("View recent update error occured.");
+         }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         
+      }
+   }
    public static void viewRecentOrders(Retail esql) {}
    public static void viewPopularProducts(Retail esql) {}
    public static void viewPopularCustomers(Retail esql) {}

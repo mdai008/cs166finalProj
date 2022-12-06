@@ -36,14 +36,14 @@
 
 
 ----------------------------------------------------------------------------------
---update prod info: for managers (check if manager id matches store), given storeID, they can update product info.
---Product and ProductUpdates table will be updated with triggers.
---manager can view the last 5 rows of ProductUpdates.
+-- --update prod info: for managers (check if manager id matches store), given storeID, they can update product info.
+-- --Product and ProductUpdates table will be updated with triggers.
+-- --manager can view the last 5 rows of ProductUpdates.
 
-SELECT *
-FROM ProductUpdates P
-WHERE P.updateNumber > (SELECT MAX(P1.updateNumber)
-                        FROM ProductUpdates P1) - 5;
+-- SELECT *
+-- FROM ProductUpdates P
+-- WHERE P.updateNumber > (SELECT MAX(P1.updateNumber)
+--                         FROM ProductUpdates P1) - 5;
 
 
 
