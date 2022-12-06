@@ -1,13 +1,13 @@
---browse stores: return the list of stores within 30 miles of user's location
---calculateDistance (double lat1, double long1, double lat2, double long2)
-SELECT S.storeID, S.name
-FROM Store S
-WHERE calculateDistance(userLat = 20, userLong = 20, S.latitude, S.longitude) <= 30;
+-- --browse stores: return the list of stores within 30 miles of user's location
+-- --calculateDistance (double lat1, double long1, double lat2, double long2)
+-- SELECT S.storeID, S.name
+-- FROM Store S
+-- WHERE calculateDistance(userLat = 20, userLong = 20, S.latitude, S.longitude) <= 30;
 
---return lat and long of current user 
-SELECT U.latitude, U.longitude
-FROM Users U
-WHERE U.userID = 255;
+-- --return lat and long of current user 
+-- SELECT U.latitude, U.longitude
+-- FROM Users U
+-- WHERE U.userID = 255;
 
 ----------------------------------------------------------------------------------
 --browse products: given a storeID, return the list of products that store provides.
