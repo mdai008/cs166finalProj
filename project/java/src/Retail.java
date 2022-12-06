@@ -388,6 +388,7 @@ public class Retail {
                 System.out.println("3. Place a Order");
                 System.out.println("4. View 5 recent orders");
                 
+                System.out.println(_type);
                 if (_type.equals("manager") || _type.equals("admin")) {
                   //the following functionalities basically used by managers
                   System.out.println("5. Update Product");
