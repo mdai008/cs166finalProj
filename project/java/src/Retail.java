@@ -402,8 +402,8 @@ public class Retail {
                 }
 
                   // String dummy = _type.strip();
-                  String dummy = "    manager".strip();
-                  
+                  String str = "    manager";
+                  String dummy = str.strip();
                   System.out.println(_type.getClass());
                 if (dummy.equals("manager")) {
                   System.out.println("a");
