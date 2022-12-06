@@ -397,6 +397,18 @@ public class Retail {
                   System.out.println("7. View 5 Popular Items");
                   System.out.println("8. View 5 Popular Customers");
                   System.out.println("9. Place Product Supply Request to Warehouse");
+                  System.out.println("10. View all order info");
+
+                }
+                
+
+                if (_type.equals("admin")) {
+                  //the following functionalities basically used by admins
+                  System.out.println("11. View all user info");
+                  System.out.println("12. View all product info");
+                  System.out.println("13. Update user info");
+                  System.out.println("14. Update product info");
+
                 }
                 
 
@@ -411,7 +423,15 @@ public class Retail {
                    case 6: viewRecentUpdates(esql, _userIDstr); break;
                    case 7: viewPopularProducts(esql); break;
                    case 8: viewPopularCustomers(esql); break;
-                   case 9: placeProductSupplyRequests(esql); break;
+                   case 9: placeProductSupplyRequests(esql, _userIDstr); break;
+                   case 10: viewOrderInfo(esql, _userIDstr); break; 
+                   case 11: viewAllUsers(esql); break; 
+                   case 12: viewAllProducts(esql); break; 
+                   case 13: updateUsers(esql); break;
+                   case 14: updateProducts(esql); break;
+
+
+
 
                    case 20: usermenu = false; break;
                    default : System.out.println("Unrecognized choice!"); break;
@@ -760,9 +780,145 @@ public class Retail {
             
       }
    }
+   public static void viewOrderInfo(Retail esql, String userID) {
+      try{
+         
+         String query = String.format("SELECT S.storeID, O.orderNumber, U.name, O.productName, O.orderTime FROM Store S, Orders O, Users U WHERE S.managerID = %s AND S.storeID = O.storeID AND O.customerID = U.userID", userID);
+         
+         
+
+
+         int userNum = esql.executeQuery(query);
+
+         if (userNum > 0) {
+            int rowNum = esql.executeQueryAndPrintResult(query); 
+         }
+         else {
+            System.out.println("View order info error occured.");
+         }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+            
+      }
+   }
    public static void viewPopularProducts(Retail esql) {}
    public static void viewPopularCustomers(Retail esql) {}
-   public static void placeProductSupplyRequests(Retail esql) {}
+
+
+   public static void placeProductSupplyRequests(Retail esql, String userID) {
+      try{
+         System.out.print("\tEnter storeID for request: ");
+         String storeID = in.readLine();
+         System.out.print("\tEnter a product for request: ");
+         String prodName = in.readLine();
+         System.out.print("\tEnter the number of units needed: ");
+         String numUnits = in.readLine();
+         System.out.print("\tEnter WarehouseID: ");
+         String warehouse = in.readLine();
+         
+         
+         String query = String.format("INSERT INTO ProductSupplyRequests(managerID, warehouseID, storeID, productName, unitsRequested) VALUES (%s, %s, %s, '%s', %s)", userID, warehouse, storeID, prodName, numUnits);
+         esql.executeUpdate(query); 
+         
+         String query2 = String.format("INSERT INTO ProductUpdates(managerID, storeID, productName, updatedOn) VALUES (%s, %s,'%s', DATE_TRUNC('second', CURRENT_TIMESTAMP::timestamp))", userID, storeID, prodName);
+         esql.executeUpdate(query2); 
+
+         String query3 = String.format("UPDATE Product SET numberOfUnits = numberOfUnits + %s  WHERE storeID = %s AND productName = '%s'", numUnits, storeID, prodName);
+         esql.executeUpdate(query3);
+         
+         
+         System.out.println("Supply request placed.");
+         
+         
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         
+      }
+   }
+   public static void viewAllUsers(Retail esql) {
+      try{
+         
+         String query = "SELECT * FROM Users";
+
+         int userNum = esql.executeQuery(query);
+
+         if (userNum > 0) {
+            int rowNum = esql.executeQueryAndPrintResult(query); 
+         }
+         else {
+            System.out.println("View all user info error occured.");
+         }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+            
+      }
+   }
+   public static void viewAllProducts(Retail esql) {
+      try{
+         
+         String query = "SELECT * FROM Product";
+
+         int userNum = esql.executeQuery(query);
+
+         if (userNum > 0) {
+            int rowNum = esql.executeQueryAndPrintResult(query); 
+         }
+         else {
+            System.out.println("View all product info error occured.");
+         }
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+            
+      }
+   }
+   public static void updateUsers(Retail esql) {
+      try{
+         System.out.print("\tEnter userID to be changed: ");
+         String userID = in.readLine();
+         System.out.print("\tEnter new user name: ");
+         String userName = in.readLine();
+         System.out.print("\tEnter new password: ");
+         String pswd = in.readLine();
+         System.out.print("\tEnter new latitude: ");
+         String lat = in.readLine();
+         System.out.print("\tEnter new longitude: ");
+         String longg = in.readLine();
+         System.out.print("\tEnter new user type: ");
+         String type = in.readLine();
+         
+         
+         String query = String.format("UPDATE Users SET name = '%s', password = '%s', latitude = %s, longitude = %s, type = '%s' WHERE userID = %s", userName, pswd, lat, longg, type, userID);
+
+         esql.executeUpdate(query);
+
+         
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         
+      }
+   }
+   public static void updateProducts(Retail esql) {
+      try{
+         System.out.print("\tEnter storeID to be updated: ");
+         String storeID = in.readLine();
+         System.out.print("\tEnter product name to be updated: ");
+         String prodName = in.readLine();
+         System.out.print("\tEnter number of units to be changed: ");
+         String numUnits = in.readLine();
+         System.out.print("\tEnter price to be changed: ");
+         String price = in.readLine();
+         
+         
+         String query = String.format("UPDATE Product SET numberOfUnits = %s, pricePerUnit = %s WHERE storeID = %s AND productName = '%s'", numUnits, price, storeID, prodName);
+
+         esql.executeUpdate(query);
+
+         
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+         
+      }
+   }
 
 }//end Retail
 
